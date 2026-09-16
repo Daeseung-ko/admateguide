@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check simulator/simulator.js)",
+      "Bash(node --check app.js)",
+      "Bash(node --check server.js)",
+      "Bash(node server.js)",
+      "Bash(curl -s -o /dev/null -w \"status: %{http_code}\\\\n\" http://localhost:3000/simulator/)",
+      "Bash(curl -s http://localhost:3000/simulator/)",
+      "Bash(curl -s -o /dev/null -w \"css: %{http_code}\\\\n\" http://localhost:3000/simulator/simulator.css)",
+      "Bash(curl -s -o /dev/null -w \"js: %{http_code}\\\\n\" http://localhost:3000/simulator/simulator.js)",
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(node --check simulator/core.js)",
+      "Bash(grep -n \"═══\\\\|/\\\\* ─── \" \"d:/Users/Administrator/admatehelp-main/admatehelp-main/app.js\")",
+      "Bash(python -c ' *)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

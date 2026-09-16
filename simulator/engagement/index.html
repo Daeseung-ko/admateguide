@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>참여수 캠페인 · X 캠페인 셋팅 시뮬레이터</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="../simulator.css">
+</head>
+<body>
+
+<!-- 상단 바 -->
+<header class="sim-nav">
+  <a class="sim-nav-back" href="/">
+    <span class="sim-nav-arrow">←</span> 도움말 센터
+  </a>
+  <!-- 도움말 센터 카테고리 바로가기 -->
+  <nav class="sim-nav-cats">
+    <span class="sim-nav-sep"></span>
+    <a class="sim-nav-cat" href="/#/category/facebook">📘 Facebook</a>
+    <a class="sim-nav-cat" href="/#/category/instagram">📸 Instagram</a>
+    <a class="sim-nav-cat" href="/#/category/twitter">🐦 X (Twitter)</a>
+    <a class="sim-nav-cat" href="/#/category/google">🔍 Google Ads</a>
+  </nav>
+  <div class="sim-nav-brand">
+    <span class="sim-nav-x" id="nav-x-logo"></span>
+    <span>X 캠페인 셋팅 시뮬레이터</span>
+  </div>
+  <div class="sim-nav-tag">SIMULATOR</div>
+</header>
+
+<main class="sim-shell">
+
+  <!-- 진행 단계 -->
+  <div class="sim-steps" id="sim-steps"></div>
+
+  <!-- 스텝 패널 영역 -->
+  <div class="sim-stage" id="sim-stage"></div>
+
+  <!-- 하단 네비게이션 -->
+  <div class="sim-footer" id="sim-footer">
+    <button class="sim-btn-ghost" id="btn-prev" onclick="SIM.prev()">← 이전</button>
+    <div class="sim-footer-hint" id="sim-hint"></div>
+    <button class="sim-btn-primary" id="btn-next" onclick="SIM.next()">다음 →</button>
+  </div>
+
+</main>
+
+<script>window.SIM_PAGE = { mode: 'objective', objective: 'engagement' };</script>
+<script src="./adgroup.js"></script>
+<script src="./ad.js"></script>
+<script src="../core.js"></script>
+</body>
+</html>

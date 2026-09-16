@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X 광고 대시보드 튜토리얼 · AdMate Help</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="./tutorial.css">
+</head>
+<body>
+
+<div class="dash">
+
+  <!-- ══ 좌측 사이드바 ══ -->
+  <aside class="side" id="tut-sidebar">
+    <div class="side-account">
+      <div class="side-avatar">M</div>
+      <div class="side-account-info">
+        <div class="side-account-name">Nasmedia 나…</div>
+        <div class="side-account-id">18ce55qlvq5</div>
+      </div>
+      <span class="side-account-chev">⌄</span>
+    </div>
+
+    <div class="side-group">캠페인</div>
+    <button class="side-item active" id="tut-analytics"><span class="side-ic">📊</span> 분석</button>
+    <button class="side-item" id="tut-campaign-form"><span class="side-ic">⊕</span> 캠페인 양식</button>
+
+    <div class="side-group">크리에이티브</div>
+    <button class="side-item" id="tut-compose"><span class="side-ic">✏️</span> 작성 도구</button>
+    <button class="side-item" id="tut-posts"><span class="side-ic">📣</span> 게시물</button>
+
+    <div class="side-group">도구</div>
+    <button class="side-item" id="tut-bulk"><span class="side-ic">📄</span> 일괄 편집기</button>
+    <button class="side-item" id="tut-audience-menu"><span class="side-ic">👥</span> 오디언스</button>
+    <button class="side-item" id="tut-app-manager"><span class="side-ic">📱</span> 앱 관리자</button>
+    <button class="side-item" id="tut-event-manager"><span class="side-ic">⚡</span> 이벤트 관리자</button>
+    <button class="side-item"><span class="side-ic">📈</span> Conversion Diagnostics</button>
+    <button class="side-item"><span class="side-ic">🛍️</span> Shopping Manager</button>
+  </aside>
+
+  <!-- ══ 메인 ══ -->
+  <main class="main">
+
+    <!-- 상단 바 -->
+    <div class="topbar" id="tut-topbar">
+      <div class="topbar-left">
+        <div class="top-search">
+          <span class="top-search-ic">🔍</span>
+          <input placeholder="Search by campaign name or ID">
+        </div>
+        <div class="top-filter-wrap">
+          <button class="top-pill" id="tut-filter" onclick="toggleFilterMenu()">▽ 필터</button>
+          <div class="filter-menu" id="filter-menu" style="display:none">
+            <button class="filter-item">Status</button>
+            <button class="filter-item">Objective</button>
+            <div class="filter-sep"></div>
+            <label class="filter-check"><input type="checkbox"> 전달됨</label>
+            <label class="filter-check"><input type="checkbox"> 삭제된 항목 표시</label>
+            <div class="filter-sep"></div>
+            <label class="filter-check"><input type="checkbox"> 테이크오버</label>
+          </div>
+        </div>
+        <button class="top-circle">⟳</button>
+      </div>
+      <div class="topbar-right">
+        <div class="top-date-wrap">
+          <button class="top-pill" id="tut-daterange" onclick="toggleDateMenu()">🗓 최근 7일</button>
+          <!-- 기간 설정 캘린더 드롭다운 -->
+          <div class="date-menu" id="date-menu" style="display:none">
+            <div class="date-body">
+              <div class="date-side">
+                <div class="date-seg"><button class="seg on">Current</button><button class="seg">Archived</button></div>
+                <button class="date-preset">오늘</button>
+                <button class="date-preset">어제</button>
+                <button class="date-preset">최근 7일</button>
+                <button class="date-preset">최근 30일</button>
+                <button class="date-preset">이번 달</button>
+                <button class="date-preset">지난달</button>
+                <button class="date-preset">이번 분기</button>
+                <button class="date-preset">지난 분기</button>
+                <button class="date-preset">올해</button>
+                <button class="date-preset">전체 기간</button>
+              </div>
+              <div class="date-cals">
+                <button class="cal-nav">‹</button>
+                <div class="cal">
+                  <div class="cal-head"><span>6월 <i class="cal-chev">⌄</i></span><span>2026 <i class="cal-chev">⌄</i></span></div>
+                  <div class="cal-grid">
+                    <span class="dow">Su</span><span class="dow">Mo</span><span class="dow">Tu</span><span class="dow">We</span><span class="dow">Th</span><span class="dow">Fr</span><span class="dow">Sa</span>
+                    <span class="d empty"></span><span class="d sel">1</span><span class="d">2</span><span class="d">3</span><span class="d">4</span><span class="d">5</span><span class="d">6</span>
+                    <span class="d">7</span><span class="d">8</span><span class="d">9</span><span class="d">10</span><span class="d">11</span><span class="d">12</span><span class="d">13</span>
+                    <span class="d">14</span><span class="d">15</span><span class="d">16</span><span class="d">17</span><span class="d">18</span><span class="d">19</span><span class="d">20</span>
+                    <span class="d">21</span><span class="d">22</span><span class="d">23</span><span class="d">24</span><span class="d">25</span><span class="d">26</span><span class="d">27</span>
+                    <span class="d">28</span><span class="d">29</span><span class="d">30</span>
+                  </div>
+                </div>
+                <div class="cal">
+                  <div class="cal-head"><span>7월 <i class="cal-chev">⌄</i></span><span>2026 <i class="cal-chev">⌄</i></span></div>
+                  <div class="cal-grid">
+                    <span class="dow">Su</span><span class="dow">Mo</span><span class="dow">Tu</span><span class="dow">We</span><span class="dow">Th</span><span class="dow">Fr</span><span class="dow">Sa</span>
+                    <span class="d empty"></span><span class="d empty"></span><span class="d empty"></span><span class="d">1</span><span class="d">2</span><span class="d">3</span><span class="d">4</span>
+                    <span class="d">5</span><span class="d">6</span><span class="d">7</span><span class="d">8</span><span class="d">9</span><span class="d">10</span><span class="d">11</span>
+                    <span class="d">12</span><span class="d">13</span><span class="d">14</span><span class="d">15</span><span class="d">16</span><span class="d">17</span><span class="d">18</span>
+                    <span class="d">19</span><span class="d today">20</span><span class="d mut">21</span><span class="d mut">22</span><span class="d mut">23</span><span class="d mut">24</span><span class="d mut">25</span>
+                    <span class="d mut">26</span><span class="d mut">27</span><span class="d mut">28</span><span class="d mut">29</span><span class="d mut">30</span><span class="d mut">31</span>
+                  </div>
+                </div>
+                <button class="cal-nav">›</button>
+              </div>
+            </div>
+            <div class="date-foot">
+              <span>모든 데이터: Korean Standard Time (Asia/Seoul)</span>
+              <span class="utc">UTC <span class="toggle-off"></span></span>
+            </div>
+          </div>
+        </div>
+        <button class="top-create" id="tut-create">캠페인 생성</button>
+      </div>
+    </div>
+
+    <!-- 지표 + 차트 카드 -->
+    <section class="card" id="tut-chart-card">
+      <div class="metric-row">
+        <div class="metric-tabs" id="tut-metrics">
+          <button class="metric active"><span class="metric-label">노출 수</span><span class="metric-val">0</span></button>
+          <button class="metric"><span class="metric-label">지출</span><span class="metric-val">₩0.00</span></button>
+          <button class="metric"><span class="metric-label">링크 클릭수</span><span class="metric-val">0</span></button>
+          <button class="metric"><span class="metric-label">Purchases</span><span class="metric-val">0</span></button>
+          <button class="metric"><span class="metric-label">Cost per purchase</span><span class="metric-val">₩0.00</span></button>
+        </div>
+        <div class="metric-actions">
+          <button class="top-pill">⇄ Compare</button>
+          <button class="icon-btn">📉</button>
+          <button class="icon-btn">📊</button>
+        </div>
+      </div>
+      <div class="chart">
+        <div class="chart-y"><span>1</span><span>0</span></div>
+        <div class="chart-plot">
+          <div class="chart-grid"></div>
+          <div class="chart-empty">
+            <div class="chart-empty-title">No data for this period</div>
+            <div class="chart-empty-sub">Try adjusting your date range or filters</div>
+          </div>
+          <div class="chart-x">
+            <span>Jul 4</span><span>Jul 5</span><span>Jul 6</span><span>Jul 7</span><span>Jul 8</span><span>Jul 9</span><span>Jul 10</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 오디언스 인사이트 -->
+    <section class="card aud" id="tut-audience">
+      <button class="aud-head" onclick="toggleAud()">
+        <span class="aud-chev" id="aud-chev">›</span> 오디언스 인사이트
+      </button>
+      <div class="aud-body" id="aud-body" style="display:none">
+        선택한 기간의 오디언스 데이터가 없습니다. 캠페인이 게재되면 연령·성별·관심사 분포가 여기에 표시됩니다.
+      </div>
+    </section>
+
+    <!-- 캠페인 테이블 -->
+    <section class="card" id="tut-table-card">
+      <div class="table-tabs-row">
+        <div class="table-tabs" id="tut-table-tabs">
+          <button class="ttab" data-panel="funding" id="tut-funding-tab">Funding instruments</button>
+          <button class="ttab active" data-panel="campaigns">Campaigns</button>
+          <button class="ttab" data-panel="adgroups">Ad groups</button>
+          <button class="ttab" data-panel="ads">Ads</button>
+        </div>
+        <div class="table-actions">
+          <button class="top-pill">지표: Summary ⌄</button>
+          <button class="icon-btn">⬇</button>
+        </div>
+      </div>
+
+      <!-- Funding instruments 패널 (STEP 진입 또는 탭 클릭 시 표시) -->
+      <div id="panel-funding" style="display:none">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-chk"><input type="checkbox"></th>
+                <th class="col-name">이름</th>
+                <th>전달 상태</th>
+                <th>시작</th>
+                <th>종료</th>
+                <th class="num">예산</th>
+                <th class="num">잔여 예산</th>
+                <th>지출</th>
+                <th>노출 수</th>
+                <th>CPM</th>
+                <th>링크 클릭수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-summary">
+                <td></td>
+                <td class="col-name"><strong>요약: 3 funding instruments</strong></td>
+                <td></td><td></td><td></td>
+                <td class="num"><strong>₩13,509,994.65</strong></td>
+                <td class="num"><strong>₩13,509,994.65</strong></td>
+                <td>₩0.00</td><td>—</td><td>—</td><td>—</td>
+              </tr>
+              <tr>
+                <td class="col-chk"><input type="checkbox"></td>
+                <td class="col-name">
+                  <div class="camp-name">@nas_tw_PTw_2026Q2 (T3282869)</div>
+                  <div class="camp-id">ID: 80698376</div>
+                </td>
+                <td><span class="status halted pill">● Halted</span></td>
+                <td>May 19, 2026</td>
+                <td>Dec 31, 2026</td>
+                <td class="num">₩6,000,000.00</td>
+                <td class="num">
+                  <div class="fund-remain">
+                    <span>₩6,000,000.00</span>
+                    <span class="fund-bar"><span class="fund-track"><span class="fund-fill" style="width:0%"></span></span><span class="fund-pct">0%</span></span>
+                  </div>
+                </td>
+                <td>—</td><td>—</td><td>—</td><td>—</td>
+              </tr>
+              <tr>
+                <td class="col-chk"><input type="checkbox"></td>
+                <td class="col-name">
+                  <div class="camp-name">Credit/debit card</div>
+                  <div class="camp-id">ID: 74091878</div>
+                </td>
+                <td><span class="status halted pill">● Halted</span></td>
+                <td>Nov 19, 2024</td>
+                <td>—</td>
+                <td class="num">₩7,509,994.65</td>
+                <td class="num">
+                  <div class="fund-remain">
+                    <span>₩7,509,994.65</span>
+                    <span class="fund-bar"><span class="fund-track"><span class="fund-fill" style="width:0%"></span></span><span class="fund-pct">0%</span></span>
+                  </div>
+                </td>
+                <td>—</td><td>—</td><td>—</td><td>—</td>
+              </tr>
+              <tr>
+                <td class="col-chk"><input type="checkbox"></td>
+                <td class="col-name">
+                  <div class="camp-name">@nas_tw_TA_24Q4 (T2960967)</div>
+                  <div class="camp-id">ID: 74091848</div>
+                </td>
+                <td><span class="status halted pill">● Halted</span></td>
+                <td>Nov 19, 2024</td>
+                <td>May 31, 2025</td>
+                <td class="num">—</td>
+                <td class="num">—</td>
+                <td>—</td><td>—</td><td>—</td><td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-foot">
+          <span>Showing 1–3 of 3</span>
+          <strong>Page 1 of 1</strong>
+        </div>
+      </div>
+
+      <!-- Campaigns 패널 (기본 표시) -->
+      <div id="panel-campaigns">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-chk"><input type="checkbox"></th>
+              <th>ON/OFF</th>
+              <th class="col-name">이름</th>
+              <th>전달 상태</th>
+              <th>목표</th>
+              <th>시작</th>
+              <th>종료</th>
+              <th>지출</th>
+              <th>노출 수</th>
+              <th>CPM</th>
+              <th>링크 클릭수</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-summary">
+              <td></td><td></td>
+              <td class="col-name"><strong>요약: 2 campaigns</strong></td>
+              <td></td><td></td><td></td><td></td>
+              <td>₩0.00</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+            <tr>
+              <td class="col-chk"><input type="checkbox"></td>
+              <td><span class="toggle-off"></span></td>
+              <td class="col-name">
+                <div class="camp-name">Nasmedia_Campaign_01</div>
+                <div class="camp-id">ID: 39726358</div>
+              </td>
+              <td><span class="status halted">● Halted</span></td>
+              <td>Engagements</td>
+              <td>Jul 12, 2025</td>
+              <td>Jul 12, 2025</td>
+              <td>—</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+            <tr>
+              <td class="col-chk"><input type="checkbox"></td>
+              <td><span class="toggle-off"></span></td>
+              <td class="col-name">
+                <div class="camp-name">Nasmedia_Campaign_02</div>
+                <div class="camp-id">ID: 39181774</div>
+              </td>
+              <td><span class="status halted">● Halted</span></td>
+              <td>Website traffic</td>
+              <td>May 31, 2025</td>
+              <td>May 31, 2025</td>
+              <td>—</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-foot">
+        <span>Showing 1–2 of 2</span>
+        <strong>Page 1 of 1</strong>
+      </div>
+      </div><!-- /panel-campaigns -->
+    </section>
+
+  </main>
+</div>
+
+<!-- 튜토리얼 재시작 / 나가기 버튼 -->
+<div class="tut-fab" id="tut-restart" style="display:none">
+  <button class="tut-restart" onclick="TUT.start()">🎓 튜토리얼 다시 보기</button>
+  <a class="tut-exit" href="/#/category/twitter">🚪 나가기</a>
+</div>
+
+<!-- 튜토리얼 오버레이 -->
+<div class="tut-overlay" id="tut-overlay" style="display:none">
+  <div class="tut-spot" id="tut-spot"></div>
+  <div class="tut-card" id="tut-card"></div>
+</div>
+
+<script src="./tutorial.js"></script>
+</body>
+</html>

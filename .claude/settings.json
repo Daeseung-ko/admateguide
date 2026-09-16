@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(taskkill //PID 17412 //F)",
+      "Bash(\"C:/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --no-sandbox --disable-gpu --user-data-dir=./edgeprofile --window-size=1600,900 --virtual-time-budget=6000 --screenshot=tut1.png \"http://localhost:3000/#/article/instagram/1779758590646\")",
+      "Bash(node -e ' *)",
+      "PowerShell($out = \"C:\\\\Users\\\\ADMINI~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Users-Administrator-admatehelp-main-admatehelp-main\\\\782f95a5-9b1a-4030-b457-3dd664c23fe4\\\\scratchpad\"; Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\(\"$out\\\\sim-app-android.png\"\\); $rect = New-Object System.Drawing.Rectangle\\(0, 1550, $img.Width, \\($img.Height - 1550\\)\\); $bmp = \\(New-Object System.Drawing.Bitmap\\($img\\)\\).Clone\\($rect, $img.PixelFormat\\); $bmp.Save\\(\"$out\\\\sim-app-android-crop2.png\"\\); $img.Dispose\\(\\); $bmp.Dispose\\(\\); \"done\")"
+    ]
+  }
+}
