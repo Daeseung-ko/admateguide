@@ -158,6 +158,7 @@ function getArticleUrl(catId, artId) {
 function updateNav() {
   document.getElementById('admin-badge').style.display      = isAdmin ? 'inline-flex' : 'none';
   document.getElementById('btn-admin-login').style.display  = isAdmin ? 'none' : 'inline-flex';
+  document.getElementById('btn-admin-pw').style.display     = isAdmin ? 'inline-flex' : 'none';
   document.getElementById('btn-admin-logout').style.display = isAdmin ? 'inline-flex' : 'none';
   document.querySelectorAll('.nav-link[data-cat]').forEach(el =>
     el.classList.toggle('active', el.dataset.cat === currentCat && currentPage === 'category')
@@ -198,16 +199,20 @@ function navigate(page, catId, skipHash) {
 }
 
 /* ─── HOME ─── */
+/* 숨김 문서는 관리자에게만 보인다 */
+function isArticleVisible(a) { return isAdmin || !a.hidden; }
+function visibleArticles(catId) { return (articles[catId] || []).filter(isArticleVisible); }
+
 function renderHome() {
   renderHomeCats();
   renderHomeArticles();
-  const total = Object.values(articles).reduce((s, a) => s + a.length, 0);
+  const total = CATS.reduce((s, cat) => s + visibleArticles(cat.id).length, 0);
   document.getElementById('total-count').textContent = '총 ' + total + '개 문서';
 }
 
 function renderHomeCats() {
   document.getElementById('home-cat-grid').innerHTML = CATS.map(cat => {
-    const cnt = (articles[cat.id] || []).length;
+    const cnt = visibleArticles(cat.id).length;
     return `<div class="cat-card" style="--cat-color:${cat.color}" onclick="navigate('category','${cat.id}')">
       <div class="cat-icon-wrap" style="background:${cat.bg}">${cat.icon}</div>
       <div class="cat-title">${cat.label}</div>
@@ -221,7 +226,7 @@ function renderHomeCats() {
 }
 
 function renderHomeArticles() {
-  const all = CATS.flatMap(cat => (articles[cat.id] || []).map(a => ({ ...a, cat })));
+  const all = CATS.flatMap(cat => visibleArticles(cat.id).map(a => ({ ...a, cat })));
   all.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   document.getElementById('home-art-grid').innerHTML = all.slice(0, 6).map(a => artCardHTML(a, a.cat)).join('');
 }
@@ -267,8 +272,8 @@ function renderCategorySimulator() {
 function renderCategoryArticles() {
   const cat = CATS.find(c => c.id === currentCat);
   const q   = (document.getElementById('cat-search-input').value || '').toLowerCase();
-  const list = (articles[currentCat] || []).filter(a => !q || a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q));
-  document.getElementById('cat-page-sub').textContent = (articles[currentCat] || []).length + '개 문서 · 도움말 아티클';
+  const list = visibleArticles(currentCat).filter(a => !q || a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q));
+  document.getElementById('cat-page-sub').textContent = visibleArticles(currentCat).length + '개 문서 · 도움말 아티클';
   const grid = document.getElementById('cat-art-grid');
   const empty = document.getElementById('cat-empty');
   if (!list.length) { grid.innerHTML = ''; empty.style.display = 'block'; }
@@ -276,9 +281,15 @@ function renderCategoryArticles() {
 }
 
 function artCardHTML(a, cat) {
-  return `<div class="art-card" style="--cat-color:${cat.color}" onclick="openArticle('${cat.id}',${a.id})">
+  const hiddenBadge = (isAdmin && a.hidden) ? '<span class="art-hidden-badge">🙈 숨김</span>' : '';
+  const hideBtn = isAdmin
+    ? `<div class="art-admin-row">
+        <button class="art-hide-btn" onclick="event.stopPropagation();toggleHidden('${cat.id}',${a.id})">${a.hidden ? '👁 숨김 해제' : '🙈 숨김'}</button>
+      </div>` : '';
+  return `<div class="art-card${a.hidden ? ' art-card-hidden' : ''}" style="--cat-color:${cat.color}" onclick="openArticle('${cat.id}',${a.id})">
     <div class="art-card-top">
       <span class="art-tag" style="background:${cat.bg};color:${cat.color}">${cat.label}</span>
+      ${hiddenBadge}
       <span class="art-date">${a.date}</span>
     </div>
     <div class="art-title">${a.title}</div>
@@ -287,6 +298,7 @@ function artCardHTML(a, cat) {
       <span class="art-read">읽어보기</span>
       <span class="art-read-arrow">→</span>
     </div>
+    ${hideBtn}
   </div>`;
 }
 
@@ -301,6 +313,9 @@ function renderArticlePage() {
   const cat = CATS.find(c => c.id === currentCat);
   const art = (articles[currentCat] || []).find(a => a.id === currentArticleId);
   if (!art || !cat) return;
+
+  /* 숨김 문서는 관리자만 열람 가능 */
+  if (art.hidden && !isAdmin) { showToast('접근할 수 없는 문서입니다.'); navigate('home'); return; }
 
   document.getElementById('art-bc-cat').textContent   = cat.label;
   document.getElementById('art-bc-title').textContent = art.title.length > 30 ? art.title.slice(0, 30) + '…' : art.title;
@@ -356,8 +371,11 @@ function renderArticlePage() {
 
   const adminActions = isAdmin ? `<div class="admin-actions">
     <button class="btn-edit" onclick="navigate('edit','${currentCat}')">✏️ 수정</button>
+    <button class="btn-hide" onclick="toggleHidden('${currentCat}',${art.id})">${art.hidden ? '👁 숨김 해제' : '🙈 숨김'}</button>
     <button class="btn-delete" onclick="openConfirmDelete(${art.id})">🗑 삭제</button>
   </div>` : '';
+  const hiddenNotice = (isAdmin && art.hidden)
+    ? '<div class="article-hidden-notice">🙈 이 문서는 <b>숨김</b> 상태입니다. 관리자에게만 표시됩니다.</div>' : '';
 
   document.getElementById('article-content').innerHTML = `
     <button class="btn-back" onclick="navigate('category','${currentCat}')">← 목록으로</button>
@@ -377,6 +395,7 @@ function renderArticlePage() {
       </button>
     </div>
     <div class="article-meta">${adminActions}</div>
+    ${hiddenNotice}
     ${isTutorialArticle(art) ? '<div id="art-tutorial"></div>' : `<p class="article-body">${nl2br(art.excerpt)}</p>`}
     ${excerptMediaHTML}
     ${mediaHTML}
@@ -1487,6 +1506,27 @@ async function saveArticle() {
   }
 }
 
+/* ─── HIDE / UNHIDE ─── */
+async function toggleHidden(catId, artId) {
+  if (!isAdmin) return;
+  const art = (articles[catId] || []).find(a => String(a.id) === String(artId));
+  if (!art) return;
+  const next = !art.hidden;
+  art.hidden = next;                              /* 메모리 즉시 반영 */
+
+  if (currentPage === 'article')       renderArticlePage();
+  else if (currentPage === 'category') renderCategoryArticles();
+  else if (currentPage === 'home')     renderHome();
+  showToast(next ? '🙈 문서를 숨겼습니다. (관리자만 표시)' : '👁 문서 숨김을 해제했습니다.');
+
+  try {
+    await api('PUT', `/api/articles/${catId}/${artId}`, { hidden: next });
+  } catch (e) {
+    console.error('[HIDE] 저장 실패:', e.message);
+    showToast('⚠ 저장 실패: ' + e.message);
+  }
+}
+
 /* ─── DELETE ─── */
 function openConfirmDelete(artId) {
   pendingDeleteId = artId;
@@ -1525,7 +1565,7 @@ function onHeroSearch(val) {
   const dd = document.getElementById('search-dropdown');
   if (q.length < 2) { dd.classList.remove('show'); dd.innerHTML = ''; return; }
   const results = CATS.flatMap(cat =>
-    (articles[cat.id] || []).filter(a => a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q)).map(a => ({ ...a, cat }))
+    visibleArticles(cat.id).filter(a => a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q)).map(a => ({ ...a, cat }))
   );
   dd.innerHTML = results.length === 0
     ? '<div class="search-no-result">검색 결과가 없습니다</div>'
@@ -1560,17 +1600,24 @@ function openLoginModal() {
 
 function closeLoginModal() { document.getElementById('login-overlay').classList.remove('show'); }
 
+/* 현재 관리자 비밀번호: 변경 시 localStorage에 저장, 없으면 기본값(ADMIN.pw) */
+function getAdminPw() {
+  try { return localStorage.getItem('admate_admin_pw') || ADMIN.pw; }
+  catch { return ADMIN.pw; }
+}
+
 function doLogin() {
   const id = document.getElementById('login-id').value.trim();
   const pw = document.getElementById('login-pw').value;
-  if (id === ADMIN.id && pw === ADMIN.pw) {
+  if (id === ADMIN.id && pw === getAdminPw()) {
     isAdmin = true;
     localStorage.setItem('admate_admin', '1');
     closeLoginModal();
     showToast('✅ 관리자로 로그인되었습니다.');
     updateNav();
-    if (currentPage === 'category') document.getElementById('btn-write-new').style.display = 'flex';
+    if (currentPage === 'category') { document.getElementById('btn-write-new').style.display = 'flex'; renderCategoryArticles(); }
     if (currentPage === 'article')  renderArticlePage();
+    if (currentPage === 'home')     renderHome();
   } else {
     const err = document.getElementById('login-error');
     err.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';
@@ -1585,7 +1632,40 @@ function logout() {
   updateNav();
   if (currentPage === 'write' || currentPage === 'edit') navigate('home');
   else if (currentPage === 'article')  renderArticlePage();
-  else if (currentPage === 'category') document.getElementById('btn-write-new').style.display = 'none';
+  else if (currentPage === 'category') { document.getElementById('btn-write-new').style.display = 'none'; renderCategoryArticles(); }
+  else if (currentPage === 'home')     renderHome();
+}
+
+/* ─── CHANGE PASSWORD ─── */
+function openPwModal() {
+  if (!isAdmin) { openLoginModal(); return; }
+  ['pw-current', 'pw-new', 'pw-confirm'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pw-error').style.display = 'none';
+  document.getElementById('pw-overlay').classList.add('show');
+  setTimeout(() => document.getElementById('pw-current').focus(), 50);
+}
+
+function closePwModal() { document.getElementById('pw-overlay').classList.remove('show'); }
+
+function doChangePw() {
+  const cur     = document.getElementById('pw-current').value;
+  const next    = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+  const err     = document.getElementById('pw-error');
+  const fail = msg => { err.textContent = msg; err.style.display = 'block'; };
+
+  if (cur !== getAdminPw())      return fail('현재 비밀번호가 올바르지 않습니다.');
+  if (next.length < 4)           return fail('새 비밀번호는 4자 이상이어야 합니다.');
+  if (next !== confirm)          return fail('새 비밀번호가 서로 일치하지 않습니다.');
+  if (next === cur)              return fail('현재 비밀번호와 다른 비밀번호를 입력해 주세요.');
+
+  try {
+    localStorage.setItem('admate_admin_pw', next);
+  } catch {
+    return fail('비밀번호를 저장할 수 없습니다. 브라우저 설정을 확인해 주세요.');
+  }
+  closePwModal();
+  showToast('🔑 비밀번호가 변경되었습니다.');
 }
 
 /* ─── TOAST ─── */
@@ -1599,6 +1679,7 @@ function showToast(msg) {
 
 /* ─── OVERLAY CLOSE ─── */
 document.getElementById('login-overlay').addEventListener('click', function(e) { if (e.target === this) closeLoginModal(); });
+document.getElementById('pw-overlay').addEventListener('click', function(e) { if (e.target === this) closePwModal(); });
 document.getElementById('confirm-overlay').addEventListener('click', function(e) { if (e.target === this) closeConfirm(); });
 
 /* ─── POPSTATE ─── */

@@ -106,6 +106,13 @@ img,video{display:block;max-width:100%}
 .art-read{font-size:11px;font-weight:700;letter-spacing:.3px;color:var(--cat-color,#d93025)}
 .art-read-arrow{font-size:13px;line-height:1;color:var(--cat-color,#d93025);opacity:.5;transform:translateX(-4px);transition:transform .35s var(--ease),opacity .3s ease}
 .art-card:hover .art-read-arrow{opacity:1;transform:translateX(3px)}
+/* 숨김 문서(관리자 화면): 카드 흐림 + 숨김 배지 + 숨김/해제 버튼 */
+.art-card-hidden{border-style:dashed;background:#faf9f7}
+.art-card-hidden .art-title,.art-card-hidden .art-excerpt{opacity:.55}
+.art-hidden-badge{font-size:10px;font-weight:700;letter-spacing:.4px;padding:3px 8px;border-radius:5px;background:rgba(140,136,128,.16);color:#6b6862}
+.art-admin-row{margin-top:12px;padding-top:12px;border-top:1px dashed #e4e1db;display:flex}
+.art-hide-btn{background:none;border:1px solid #e0ddd6;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;color:#5a5754;cursor:pointer;transition:border-color .15s,background .15s}
+.art-hide-btn:hover{border-color:#8c8880;background:#f3f1ed}
 
 /* ── BREADCRUMB ── */
 .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:#8c8880;padding:22px 48px 0}
@@ -169,6 +176,10 @@ img,video{display:block;max-width:100%}
 .btn-edit:hover{border-color:#8c8880}
 .btn-delete{background:none;border:1px solid rgba(217,48,37,.2);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;color:#d93025;cursor:pointer;transition:border-color .15s}
 .btn-delete:hover{border-color:#d93025}
+.btn-hide{background:none;border:1px solid #e8e6e1;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;color:#5a5754;cursor:pointer;transition:border-color .15s}
+.btn-hide:hover{border-color:#8c8880}
+.article-hidden-notice{margin:6px 0 18px;padding:11px 15px;background:rgba(140,136,128,.1);border:1px solid rgba(140,136,128,.28);border-radius:9px;font-size:13px;color:#5a5754}
+.article-hidden-notice b{color:#0a0a0a}
 .article-body{font-size:15px;color:#5a5754;line-height:1.8;margin-bottom:24px}
 .media-section-title{font-size:12px;font-weight:700;letter-spacing:.5px;color:#8c8880;text-transform:uppercase;margin-bottom:14px}
 .media-gallery{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}

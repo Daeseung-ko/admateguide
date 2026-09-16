@@ -35,7 +35,7 @@ server.js는 환경변수 존재 여부로 로컬/Vercel 모드를 자동 전환
 - **server.js** — Express 서버 전체. 데이터 레이어(loadArticles/saveArticles), 업로드 미들웨어, REST API, SPA 폴백이 한 파일에 있다.
 - **index.html + app.js + style.css** — SPA 프론트엔드. 프레임워크 없이 해시 라우팅(`navigate()`)으로 home / category / article 페이지를 전환한다.
 - 데이터 구조: `{ facebook: [...], instagram: [...], twitter: [...], google: [...] }` — 카테고리별 게시글 배열. 게시글은 `{ id, title, excerpt, date, views, media, excerptMedia, steps: [{ text, media }] }` 형태.
-- 관리자 인증은 app.js 상단의 `ADMIN` 상수(하드코딩)로 프론트엔드에서만 검사한다. 서버 API에는 인증이 없다.
+- 관리자 인증은 app.js 상단의 `ADMIN` 상수(하드코딩)로 프론트엔드에서만 검사한다. 서버 API에는 인증이 없다. 비밀번호는 로그인 후 '🔑 비밀번호 변경'으로 바꿀 수 있으며, 변경값은 `localStorage['admate_admin_pw']`에 저장된다(없으면 `ADMIN.pw` 기본값). 즉 **비밀번호 변경은 브라우저별로만 적용**된다. 로그인 비교는 `getAdminPw()`를 사용.
 - API 엔드포인트: `GET/POST/PUT/DELETE /api/articles[...]`, `POST/DELETE /api/upload`, `GET /api/config`, `GET /api/debug`, `POST /api/reset`
 
 ### 독립 서브 앱 (정적 서빙)
@@ -47,6 +47,19 @@ server.js는 환경변수 존재 여부로 로컬/Vercel 모드를 자동 전환
 ## 작업 기록
 
 > 새로운 작업을 완료하면 아래에 날짜와 함께 요약을 추가할 것. (최신 항목을 위에)
+
+- **2026-09-16** — 문서별 숨김/숨김 해제 기능 추가 (숨김 문서는 관리자만 열람).
+  - 게시글에 선택적 `hidden:true` 필드. 서버 PUT은 `{...기존, ...body}` 병합이라 `{hidden}` PUT으로 영속화(Mongo/파일 공통).
+  - app.js `isArticleVisible(a)`(=isAdmin||!a.hidden)·`visibleArticles(catId)` 신설 → 홈 목록/카운트, 카테고리 목록/카운트, 검색 드롭다운을 전부 이 필터로 교체. 비관리자가 숨김 문서 URL로 직접 접근 시 `renderArticlePage`에서 홈으로 리다이렉트.
+  - `toggleHidden(catId, artId)`: 메모리 즉시 반영 + 현재 화면 재렌더 + 토스트 + `PUT /api/articles/:cat/:id {hidden}`. artCardHTML에 관리자용 '🙈 숨김'/'👁 숨김 해제' 버튼(event.stopPropagation)·'🙈 숨김' 배지·`.art-card-hidden` 흐림. 상세 페이지 admin-actions에 숨김 토글 버튼 + 숨김 상태 안내 배너. 로그인/로그아웃 시 현재 화면(home/category) 재렌더로 즉시 반영.
+  - style.css `.art-card-hidden`/`.art-hidden-badge`/`.art-admin-row`/`.art-hide-btn`/`.btn-hide`/`.article-hidden-notice` 신설.
+  - 검증: Chrome CDP(headless)로 관리자 12개(숨김 버튼 12) → 1개 숨김 시 memory·server `hidden:true`·배지 표시 → 로그아웃 후 11개로 필터·직접 URL 접근 홈 리다이렉트·검색 제외 → 재로그인 후 해제 시 `false` 복구 전 과정 어서션 + 스크린샷 확인(테스트 후 data/articles.json 백업 복원).
+
+- **2026-09-16** — 관리자 비밀번호 변경 기능 추가 (프론트 전용, 브라우저별 적용).
+  - nav에 '🔑 비밀번호 변경' 버튼(`#btn-admin-pw`, 관리자일 때만 표시, updateNav 토글). index.html에 비밀번호 변경 모달(`#pw-overlay`: 현재/새/새 확인 3필드) 추가 — 기존 로그인 모달 스타일 재사용.
+  - app.js `getAdminPw()`(localStorage `admate_admin_pw` 우선, 없으면 `ADMIN.pw`) 신설, `doLogin`이 이를 사용. `openPwModal`/`closePwModal`/`doChangePw` 추가 — 검증(현재 비번 일치·새 비번 4자 이상·확인 일치·현재와 상이) 후 localStorage 저장 + 토스트. 배경 클릭 닫기 리스너 추가. 로그아웃은 세션(`admate_admin`)만 제거하고 변경 비번은 유지.
+  - **한계**: localStorage 저장이라 비밀번호 변경은 그 브라우저에만 적용(서버 무인증·이중모드라 서버 저장은 보안 이점 없고 articles 스토어와 분리 필요해 제외).
+  - 검증: Chrome CDP(headless)로 로그인(기본 비번)→버튼 노출→오답/불일치 에러→정상 변경(localStorage 저장)→로그아웃 후 구비번 실패·새 비번 성공 전 과정 어서션 + 모달 스크린샷 확인 완료.
 
 - **2026-09-16** — 문서 튜토리얼 줌을 **돋보기(loupe) 방식**으로 개편 + 카드 강조어를 네모 박스로 (스포트라이트 있는 모든 이미지 스텝 공통).
   - **돋보기 줌**: 전체 스크린샷은 그대로 두고 **하이라이트 영역만 확대**. 각 rect 위에 `.atv-loupe`(배경=스크린샷)를 얹고, `layoutTutLoupes()`가 표시 이미지 크기에 맞춰 `background-size/position`을 픽셀로 계산해 해당 rect를 1:1로 정렬 → `transform:scale(tutZoom)`(origin center)로 그 영역만 돋보기처럼 커진다. base 이미지는 스케일하지 않음(전체 화면 고정). 이전의 이미지 전체 스케일(`.atv-zoom`/`.atv-zoomclip`) 방식은 제거.
