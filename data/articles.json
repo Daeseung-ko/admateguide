@@ -1,6 +1,130 @@
 {
   "facebook": [
     {
+      "title": "Meta Sentinel 최초 연결 가이드",
+      "excerpt": "센티넬 가이드",
+      "excerptMedia": [],
+      "steps": [
+        {
+          "text": "- 로그인 후 '+ 캠페인' 을 클릭합니다",
+          "media": [
+            {
+              "url": "/uploads/1792571204513-6pkp-senti1.JPEG",
+              "name": "senti1.JPEG",
+              "type": "image",
+              "size": 221033,
+              "width": null,
+              "height": null,
+              "boxes": [
+                {
+                  "x": 94.8,
+                  "y": 7.1,
+                  "w": 4.5,
+                  "h": 4.4,
+                  "color": "#d93025",
+                  "label": "'+캠페인' 클릭"
+                }
+              ]
+            }
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "below",
+            "rects": [
+              {
+                "x": 94.8,
+                "y": 7.1,
+                "w": 4.5,
+                "h": 4.4,
+                "color": "#d93025",
+                "label": "'+캠페인' 클릭"
+              }
+            ]
+          }
+        },
+        {
+          "text": "- 필요한 기능을 선택합니다",
+          "media": [
+            {
+              "url": "/uploads/1792571245682-z7ou-senti2.JPEG",
+              "name": "senti2.JPEG",
+              "type": "image",
+              "size": 228044,
+              "width": null,
+              "height": null,
+              "boxes": [
+                {
+                  "x": 12.8,
+                  "y": 28.3,
+                  "w": 64.4,
+                  "h": 41.5,
+                  "color": "#d93025",
+                  "label": "기능 선택"
+                }
+              ]
+            }
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "right",
+            "rects": [
+              {
+                "x": 12.8,
+                "y": 28.3,
+                "w": 64.4,
+                "h": 41.5,
+                "color": "#d93025",
+                "label": "기능 선택"
+              }
+            ]
+          }
+        },
+        {
+          "text": "- 배정된 Meta 사용자를 확인합니다 (실제 본인인지 확인하고, 사용자 선택)",
+          "media": [
+            {
+              "url": "/uploads/1792571280500-3w5c-senti3.JPEG",
+              "name": "senti3.JPEG",
+              "type": "image",
+              "size": 215675,
+              "width": null,
+              "height": null,
+              "boxes": [
+                {
+                  "x": 13.6,
+                  "y": 51,
+                  "w": 62.6,
+                  "h": 31.9,
+                  "color": "#d93025",
+                  "label": "이메일 또는 광고계정ID, 캠페인 URL 등록"
+                }
+              ]
+            }
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "right",
+            "rects": [
+              {
+                "x": 13.6,
+                "y": 51,
+                "w": 62.6,
+                "h": 31.9,
+                "color": "#d93025",
+                "label": "이메일 또는 광고계정ID, 캠페인 URL 등록"
+              }
+            ]
+          }
+        }
+      ],
+      "media": [],
+      "id": 1792571390744,
+      "date": "2026-10-21"
+    },
+    {
       "title": "카탈로그 파트너 할당 가이드 예정",
       "excerpt": "카탈로그 파트너 할당 가이드 예정",
       "excerptMedia": [],
