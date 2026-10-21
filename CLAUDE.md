@@ -48,6 +48,15 @@ server.js는 환경변수 존재 여부로 로컬/Vercel 모드를 자동 전환
 
 > 새로운 작업을 완료하면 아래에 날짜와 함께 요약을 추가할 것. (최신 항목을 위에)
 
+- **2026-10-13** — 문서 작성/수정 화면에 **하이라이트 박스 편집기** 추가 + '스포트라이트 자동 생성' → **'튜토리얼 자동 생성'**으로 개편.
+  - 스텝 이미지는 썸네일 대신 전체 폭으로 표시(`buildHlItem`, `.hl-item`). 이미지 위 드래그로 박스 생성, 박스 드래그 이동, 우하단 핸들 크기 조절, × 삭제. 색상 팔레트 6색(`HL_PALETTE`) + `<input type=color>` 직접 선택(선택된 박스 색도 즉시 변경), 박스별 라벨/라벨 위치(위·왼쪽), '⛶ 크게 보기' 전체 화면 편집(Esc 닫기), 첫 이미지에 '말풍선 위치' 셀렉트(`step.cardPos`). 포인터 이벤트(`hlPointerDown/Move/Up`, 전역 상태 `hlDrag`/`hlSel`/`hlColor`).
+  - 데이터: 박스는 `media.boxes = [{x,y,w,h,color,label,labelPos?}]`(% 좌표). 저장(`saveArticle`)과 '튜토리얼 자동 생성'(`autoGenerateSpots`) 모두 `boxesToSpots()`로 `step.spots = {auto:false, manual:true, card, rects:[{…,color}]}` 생성 — 첫 미디어가 이미지일 때 그 박스 사용. 박스 없는 단계: 기존 `auto:false` 수동 좌표는 유지, 그 외 '따옴표 단어' OCR 폴백(엔진은 필요할 때만 로드). 생성 완료 후 튜토리얼 자동 오픈.
+  - 수정 화면 진입(`initWriteForm`) 시 spots/boxes/cardPos 보존(기존엔 수정 저장 시 spots가 사라졌음). 박스 없이 spots만 있는 기존 문서는 rects를 박스로 시드해 바로 수정 가능(`syncStepSpots`가 박스 기반 spots 재생성, 박스로 만든 spots는 박스 전부 삭제 시 제거).
+  - 렌더러: `rect.color`가 있으면 `.atv-spot.custom` + CSS 변수(`--spot/--spot-a1/--spot-a2`, `tutSpotVars`)로 테두리·펄스·라벨 칩 색 적용, loupe `outline-color`도 동일. 없으면 기존 카테고리 색(빨강/X 파랑). PPT(`tutStepShot`)도 박스별 색 반영.
+  - style.css `.hl-*` 편집기 스타일 + `.atv-spot.custom` 변형 신설.
+  - (후속) 작성/수정 영역 `.write-wrap` max-width 1080 → **1480px**(좌우 padding 40px)로 확장해 스텝 이미지가 크게 보이도록 함. 편집기 이미지는 `width:auto;max-width:100%`(`.hl-canvas` inline-block, stage 중앙 정렬)로 **원본 크기까지만** 표시 — 작은 이미지를 억지로 늘려 깨지지 않음. 1700/1400/1100 뷰포트에서 1905px 캡처가 1356/1276/976px로 표시, 박스 레이어가 이미지 경계와 일치함을 확인. 문서 페이지의 관리자 전용 영역(`.steps-admin-wrap`)도 동일 폭 — `@media(min-width:1180px)`에서 `width:min(1400px,100vw-100px)` + `left:50%;transform:translateX(-50%)`로 1080px 본문 밖으로 넓혀 화면 중앙 배치(일반 사용자 화면·본문 폭은 그대로). 1700/1400/1100/900 뷰포트에서 1400/1300/984/804px, 중앙 오차 0, 가로 스크롤 없음 확인.
+  - 검증: Chrome headless + raw CDP(Node 24 내장 WebSocket, puppeteer 불필요) 하니스로 박스 그리기/색/라벨/이동/리사이즈/전체화면/저장→spots 변환/튜토리얼 색상 렌더/버튼 문구/수정 화면 복원/기존 문서 시드 전 과정 어서션 + 스크린샷 확인(테스트 문서 삭제·data/articles.json 백업 복원).
+
 - **2026-09-16** — 문서별 숨김/숨김 해제 기능 추가 (숨김 문서는 관리자만 열람).
   - 게시글에 선택적 `hidden:true` 필드. 서버 PUT은 `{...기존, ...body}` 병합이라 `{hidden}` PUT으로 영속화(Mongo/파일 공통).
   - app.js `isArticleVisible(a)`(=isAdmin||!a.hidden)·`visibleArticles(catId)` 신설 → 홈 목록/카운트, 카테고리 목록/카운트, 검색 드롭다운을 전부 이 필터로 교체. 비관리자가 숨김 문서 URL로 직접 접근 시 `renderArticlePage`에서 홈으로 리다이렉트.

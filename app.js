@@ -361,8 +361,8 @@ function renderArticlePage() {
     mediaHTML        = '';
     stepsHTML        = isAdmin && stepsHTML
       ? `<div class="steps-admin-wrap">
-          <div class="steps-admin-note">🔒 관리자 전용 — 단계별 가이드 원본입니다. 일반 사용자에게는 위 튜토리얼만 노출되며, 이 내용을 수정하면 튜토리얼이 자동으로 갱신됩니다.
-            <button id="btn-auto-spots" class="btn-auto-spots" onclick="autoGenerateSpots()">✨ 스포트라이트 자동 생성</button>
+          <div class="steps-admin-note">🔒 관리자 전용 — 단계별 가이드 원본입니다. 일반 사용자에게는 위 튜토리얼만 노출됩니다. 문서 수정 화면에서 이미지 위에 그린 하이라이트 박스와 설명을 저장한 뒤 '튜토리얼 자동 생성'을 누르면 튜토리얼이 만들어집니다. (박스가 없는 단계는 설명의 '따옴표 단어'를 화면에서 찾아 자동 강조)
+            <button id="btn-auto-spots" class="btn-auto-spots" onclick="autoGenerateSpots()">✨ 튜토리얼 자동 생성</button>
           </div>
           ${stepsHTML}
         </div>`
@@ -486,7 +486,8 @@ function tutStepShot(step, cfg, color) {
         };
         rects.forEach(r => {
           const b = px(r);
-          cx.lineWidth = 3; cx.strokeStyle = color;
+          const rc = tutHexRgb(r.color) ? r.color : color;   /* 박스별 색 (편집기 지정) 우선 */
+          cx.lineWidth = 3; cx.strokeStyle = rc;
           rr(b.x, b.y, b.w, b.h, 10); cx.stroke();
           if (r.label) { /* 라벨 칩: 기본 위, labelPos:left 는 왼쪽 */
             cx.font = '700 19px "Malgun Gothic", "Pretendard", sans-serif';
@@ -502,7 +503,7 @@ function tutStepShot(step, cfg, color) {
             }
             lx = Math.max(4, Math.min(W - cw - 4, lx));
             ly = Math.max(4, Math.min(H - ch - 4, ly));
-            cx.fillStyle = color;
+            cx.fillStyle = rc;
             rr(lx, ly, cw, ch, 8); cx.fill();
             cx.fillStyle = '#fff';
             cx.textBaseline = 'middle';
@@ -562,6 +563,21 @@ async function downloadTutPptx() {
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = restore || '⬇ PPT 다운로드'; }
   }
+}
+
+/* 스포트라이트 색 CSS 변수 (편집기에서 고른 색): --spot 테두리/라벨, --spot-a1/-a2 펄스 그림자 */
+function tutHexRgb(c) {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(c || '').trim());
+  if (!m) return null;
+  let h = m[1];
+  if (h.length === 3) h = h.split('').map(ch => ch + ch).join('');
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+function tutSpotVars(color) {
+  const rgb = tutHexRgb(color);
+  if (!rgb) return '';
+  const [r, g, b] = rgb;
+  return `--spot:${color};--spot-a1:rgba(${r},${g},${b},.22);--spot-a2:rgba(${r},${g},${b},.42);`;
 }
 
 /* 튜토리얼 말풍선용 텍스트: 줄 앞의 "- " 불릿 제거 + 따옴표 단어 강조 */
@@ -706,8 +722,9 @@ function renderArtTutStep() {
       <rect x="0" y="0" width="100" height="100" fill="rgba(8,8,8,0.45)" mask="url(#atv-holes)"/>
     </svg>` : '';
 
+  /* rect.color 가 있으면(편집기에서 그린 박스) 그 색으로, 없으면 카테고리 기본색(빨강/X 파랑) */
   const spotsHTML = rects.map(r =>
-    `<div class="atv-spot" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%">
+    `<div class="atv-spot${r.color ? ' custom' : ''}" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%;${tutSpotVars(r.color)}">
       ${r.label ? `<div class="atv-spot-label ${r.labelPos || ''}">${escHtml(r.label)}</div>` : ''}
     </div>`
   ).join('');
@@ -734,7 +751,7 @@ function renderArtTutStep() {
       /* 하이라이트 있는 스텝: 전체 화면은 그대로, 하이라이트 영역만 돋보기로 확대.
          각 rect 위에 이미지 동일 영역을 1:1로 보여주는 loupe를 얹고 scale 로 확대한다. */
       const loupes = rects.map(r =>
-        `<div class="atv-loupe intro" data-x="${r.x}" data-y="${r.y}" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%;background-image:url('${media.url}')"></div>`
+        `<div class="atv-loupe intro" data-x="${r.x}" data-y="${r.y}" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%;background-image:url('${media.url}')${r.color ? `;outline-color:${escHtml(r.color)}` : ''}"></div>`
       ).join('');
       mainHTML = `<div class="atv-main">
         <div class="atv-imgwrap">
@@ -1113,27 +1130,42 @@ function tutLoadImage(url) {
   });
 }
 
+/* 튜토리얼 자동 생성:
+   1) 문서 수정 화면에서 그린 하이라이트 박스(media.boxes)가 있는 단계 → 박스를 그대로 스포트라이트로 변환
+   2) 박스가 없고 수동 좌표(auto:false)가 있는 단계 → 그대로 유지
+   3) 그 외 이미지 + '따옴표 단어'가 있는 단계 → OCR로 단어를 찾아 스포트라이트 생성(기존 방식, 필요할 때만 엔진 로드) */
 async function autoGenerateSpots() {
   if (!isAdmin) return;
   const art = (articles[currentCat] || []).find(a => a.id === currentArticleId);
   if (!art) return;
   const btn = document.getElementById('btn-auto-spots');
   const setBtn = t => { if (btn) btn.textContent = t; };
+  let worker = null;
   try {
     if (btn) btn.disabled = true;
-    setBtn('⏳ OCR 엔진 로드 중...');
-    await loadScriptOnce(TESSERACT_CDN);
-    const worker = await Tesseract.createWorker({ langPath: TESS_LANG_PATH, gzip: true });
-    await worker.loadLanguage('kor+eng');
-    await worker.initialize('kor+eng');
+    setBtn('⏳ 튜토리얼 생성 중...');
 
     const steps = art.steps.map(s => ({ ...s }));
     for (let si = 0; si < steps.length; si++) {
       const s     = steps[si];
       const media = (s.media || [])[0];
       const terms = tutQuotedTerms(s.text);
+
+      /* 1) 하이라이트 박스 → 스포트라이트 */
+      const fromBoxes = boxesToSpots(s);
+      if (fromBoxes) { s.spots = fromBoxes; continue; }
+      /* 2) 수동 좌표는 보존 (박스로 만든 것은 박스가 없어졌으므로 제거) */
+      if (s.spots && s.spots.auto === false && !s.spots.manual) continue;
       delete s.spots;
+      /* 3) OCR 폴백 */
       if (!media || media.type !== 'image' || !terms.length) continue;
+      if (!worker) {
+        setBtn('⏳ OCR 엔진 로드 중...');
+        await loadScriptOnce(TESSERACT_CDN);
+        worker = await Tesseract.createWorker({ langPath: TESS_LANG_PATH, gzip: true });
+        await worker.loadLanguage('kor+eng');
+        await worker.initialize('kor+eng');
+      }
       setBtn(`⏳ ${si + 1}/${steps.length} 단계 인식 중...`);
 
       const im = await tutLoadImage(media.url);
@@ -1186,20 +1218,22 @@ async function autoGenerateSpots() {
         s.spots = { auto: true, card: tutChooseCard(rects), rects };
       }
     }
-    await worker.terminate();
+    if (worker) { await worker.terminate(); worker = null; }
 
     setBtn('⏳ 저장 중...');
     const updated = await api('PUT', `/api/articles/${currentCat}/${art.id}`, { steps });
     const idx = articles[currentCat].findIndex(a => a.id === updated.id);
     if (idx !== -1) articles[currentCat][idx] = updated;
-    const found = steps.filter(s => s.spots).length;
-    showToast(`✅ 스포트라이트 자동 생성 완료 (${found}/${steps.length} 단계)`);
+    const found = steps.filter(s => s.spots && (s.spots.rects || []).length).length;
+    showToast(`✅ 튜토리얼 자동 생성 완료 (하이라이트 ${found}/${steps.length} 단계)`);
     renderArticlePage();
+    openArtTut(0);   /* 생성 결과를 바로 튜토리얼로 보여준다 */
   } catch (e) {
     console.error('[AUTO SPOTS]', e);
-    showToast('⚠️ 자동 생성 실패: ' + e.message);
+    showToast('⚠️ 튜토리얼 자동 생성 실패: ' + e.message);
+    if (worker) { try { await worker.terminate(); } catch (_) { /* 무시 */ } }
   } finally {
-    if (btn) { btn.disabled = false; setBtn('✨ 스포트라이트 자동 생성'); }
+    if (btn) { btn.disabled = false; setBtn('✨ 튜토리얼 자동 생성'); }
   }
 }
 
@@ -1219,9 +1253,31 @@ function copyArticleLink() {
 function initWriteForm(existing) {
   isEditMode = !!existing;
   wSteps = existing
-    ? (existing.steps || []).map(s => ({ text: s.text || '', media: (s.media || []).map(m => ({ ...m })) }))
+    ? (existing.steps || []).map(s => {
+        const step = {
+          text:  s.text || '',
+          media: (s.media || []).map(m => ({ ...m, boxes: Array.isArray(m.boxes) ? m.boxes.map(b => ({ ...b })) : [] })),
+        };
+        if (s.spots)   step.spots   = s.spots;                       /* 기존 스포트라이트는 유지 */
+        if (s.cardPos) step.cardPos = s.cardPos;
+        /* 예전(OCR/수동 좌표) 스포트라이트는 편집기에 박스로 보여줘 바로 수정할 수 있게 한다 */
+        const first = step.media[0];
+        if (first && first.type === 'image' && !first.boxes.length && s.spots && (s.spots.rects || []).length) {
+          first.boxes = s.spots.rects.map(r => ({
+            x: r.x, y: r.y, w: r.w, h: r.h,
+            color: r.color || (currentCat === 'twitter' ? '#1d9bf0' : '#d93025'),
+            label: r.label || '',
+            ...(r.labelPos === 'left' ? { labelPos: 'left' } : {}),
+          }));
+          if (!step.cardPos && s.spots.card) step.cardPos = s.spots.card;
+        } else if (!step.cardPos && s.spots && s.spots.card === 'center') {
+          step.cardPos = 'center';
+        }
+        return step;
+      })
     : [{ text: '', media: [] }];
   if (!wSteps.length) wSteps = [{ text: '', media: [] }];
+  hlSel = null; hlDrag = null; hlColor = null;
   wMedia        = existing ? [...(existing.media        || [])] : [];
   wExcerptMedia = existing ? [...(existing.excerptMedia || [])] : [];
 
@@ -1276,6 +1332,8 @@ function buildStepBlock(s, si) {
 
 function buildStepMediaItems(si) {
   return (wSteps[si].media || []).map((m, mi) => {
+    /* 이미지는 전체 크기로 보여주고 그 위에 하이라이트 박스를 그리는 편집기로 표시 */
+    if (m.type === 'image') return buildHlItem(si, mi);
     const pw = m.width  ? m.width  + 'px' : '200px';
     const ph = m.height ? m.height + 'px' : 'auto';
     return `<div class="step-media-item" id="step-media-${si}-${mi}">
@@ -1350,6 +1408,288 @@ function resetStepSize(si, mi) {
 function refreshStepMediaList(si) {
   const el = document.getElementById('step-media-list-' + si);
   if (el) el.innerHTML = buildStepMediaItems(si);
+}
+
+/* ═══════════════════════════════════════
+   하이라이트(스포트라이트) 박스 편집기 — 문서 작성/수정 화면
+   스텝 이미지를 전체 크기로 보여주고, 그 위를 드래그해 원하는 색의 박스를 그린다.
+   박스는 media.boxes = [{x,y,w,h,color,label,labelPos}] (% 좌표)로 저장되고,
+   저장 시 boxesToSpots()가 step.spots(튜토리얼 스포트라이트)로 변환한다.
+═══════════════════════════════════════ */
+const HL_PALETTE = ['#d93025', '#1d9bf0', '#16a34a', '#f59e0b', '#8b5cf6', '#0a0a0a'];
+let hlColor = null;   /* 현재 선택 색 (null → 카테고리 기본색) */
+let hlSel   = null;   /* 선택된 박스 { si, mi, k } */
+let hlDrag  = null;   /* 드래그 상태 { mode:'draw'|'move'|'resize', ... } */
+
+function hlDefaultColor() { return currentCat === 'twitter' ? '#1d9bf0' : '#d93025'; }
+function hlCurColor()     { return (hlColor || hlDefaultColor()).toLowerCase(); }
+function hlBoxes(si, mi) {
+  const m = wSteps[si].media[mi];
+  if (!Array.isArray(m.boxes)) m.boxes = [];
+  return m.boxes;
+}
+function hlRound(b) {
+  const r = v => Math.round(v * 10) / 10;
+  return { x: r(b.x), y: r(b.y), w: r(b.w), h: r(b.h) };
+}
+
+function buildHlItem(si, mi) {
+  const m       = wSteps[si].media[mi];
+  const cardPos = wSteps[si].cardPos || 'auto';
+  const first   = mi === 0;
+  const cardOpts = [['auto', '자동'], ['below', '아래'], ['above', '위'], ['right', '오른쪽'], ['left', '왼쪽'], ['center', '이미지 중앙']];
+  return `<div class="step-media-item hl-item" id="step-media-${si}-${mi}">
+    <div class="hl-head">
+      <div class="hl-title">🎯 하이라이트 편집
+        <span class="hl-tip">이미지 위를 드래그해 강조할 영역에 박스를 그리세요. 박스는 드래그로 이동, 우하단 모서리로 크기 조절.${first ? '' : ' (튜토리얼 화면에는 첫 번째 이미지만 사용됩니다)'}</span>
+      </div>
+      <div class="hl-colors">${hlColorsHTML()}</div>
+      <button type="button" class="hl-btn" onclick="hlToggleFull(${si},${mi})">⛶ 크게 보기</button>
+      <button type="button" class="btn-remove-step-media" title="이미지 삭제" onclick="removeStepMedia(${si},${mi})">×</button>
+    </div>
+    <div class="hl-stage" id="hl-stage-${si}-${mi}" onpointerdown="hlPointerDown(event,${si},${mi})">
+      <div class="hl-canvas">
+        <img class="hl-img" src="${m.url}" alt="" draggable="false">
+        <div class="hl-layer" id="hl-layer-${si}-${mi}">${hlLayerHTML(si, mi)}</div>
+      </div>
+    </div>
+    <div class="hl-rows" id="hl-rows-${si}-${mi}">${hlRowsHTML(si, mi)}</div>
+    <div class="hl-foot">
+      ${first ? `<label class="hl-foot-label">말풍선 위치
+        <select class="hl-select" onchange="wSteps[${si}].cardPos=this.value">
+          ${cardOpts.map(([v, l]) => `<option value="${v}" ${cardPos === v ? 'selected' : ''}>${l}</option>`).join('')}
+        </select>
+      </label>` : ''}
+      <div class="step-media-size compact">
+        <span class="hl-foot-label">문서 표시 크기</span>
+        <input class="size-input" type="number" min="50" max="1200" placeholder="너비 자동" value="${m.width || ''}"
+          onchange="updateStepSize(${si},${mi},'width',this.value)">
+        <div class="size-sep" style="margin-top:0">×</div>
+        <input class="size-input" type="number" min="50" max="1200" placeholder="높이 자동" value="${m.height || ''}"
+          onchange="updateStepSize(${si},${mi},'height',this.value)">
+        <button type="button" class="btn-size-reset" style="margin-top:0" onclick="resetStepSize(${si},${mi})">↺</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function hlColorsHTML() {
+  const cur    = hlCurColor();
+  const custom = !HL_PALETTE.includes(cur);
+  return HL_PALETTE.map(c =>
+    `<button type="button" class="hl-sw ${c === cur ? 'on' : ''}" style="--c:${c}" title="${c}" onclick="hlPickColor('${c}')"></button>`).join('')
+    + `<label class="hl-sw custom ${custom ? 'on' : ''}" title="원하는 색 직접 선택" style="--c:${custom ? cur : '#fff'}">
+        <input type="color" value="${custom ? cur : '#ff6600'}" oninput="hlPickColor(this.value)">${custom ? '' : '+'}
+      </label>`;
+}
+
+/* 색 선택: 현재 색 변경 + 선택된 박스가 있으면 그 박스 색도 변경 */
+function hlPickColor(c) {
+  hlColor = String(c || '').toLowerCase();
+  if (hlSel) {
+    const b = hlBoxes(hlSel.si, hlSel.mi)[hlSel.k];
+    if (b) { b.color = hlColor; hlRefresh(hlSel.si, hlSel.mi); }
+  }
+  document.querySelectorAll('.hl-colors').forEach(el => { el.innerHTML = hlColorsHTML(); });
+}
+
+function hlLayerHTML(si, mi) {
+  return hlBoxes(si, mi).map((b, k) => {
+    const sel = hlSel && hlSel.si === si && hlSel.mi === mi && hlSel.k === k;
+    return `<div class="hl-box ${sel ? 'sel' : ''}" data-k="${k}" style="left:${b.x}%;top:${b.y}%;width:${b.w}%;height:${b.h}%;--c:${b.color || hlDefaultColor()}">
+      <span class="hl-box-num ${b.labelPos === 'left' ? 'left' : ''}">${b.label ? escHtml(b.label) : k + 1}</span>
+      <button type="button" class="hl-box-del" data-k="${k}" title="박스 삭제">×</button>
+      <span class="hl-box-handle" data-k="${k}"></span>
+    </div>`;
+  }).join('');
+}
+
+function hlRowsHTML(si, mi) {
+  const boxes = hlBoxes(si, mi);
+  if (!boxes.length) return '<div class="hl-empty">아직 하이라이트가 없습니다. 이미지 위를 드래그해 박스를 만드세요.</div>';
+  return boxes.map((b, k) => {
+    const sel = hlSel && hlSel.si === si && hlSel.mi === mi && hlSel.k === k;
+    return `<div class="hl-row ${sel ? 'sel' : ''}" onclick="hlSelect(${si},${mi},${k})">
+      <span class="hl-row-num" style="--c:${b.color || hlDefaultColor()}">${k + 1}</span>
+      <input class="hl-row-label" type="text" maxlength="40" placeholder="라벨 (선택) — 박스 위에 표시되는 이름표"
+        value="${escHtml(b.label || '')}" oninput="hlSetLabel(${si},${mi},${k},this.value)" onclick="event.stopPropagation()">
+      <select class="hl-select" onchange="hlSetLabelPos(${si},${mi},${k},this.value)" onclick="event.stopPropagation()">
+        <option value="">라벨 위</option>
+        <option value="left" ${b.labelPos === 'left' ? 'selected' : ''}>라벨 왼쪽</option>
+      </select>
+      <span class="hl-row-coord">${b.x}%, ${b.y}% · ${b.w}×${b.h}%</span>
+      <button type="button" class="hl-row-del" onclick="event.stopPropagation();hlRemoveBox(${si},${mi},${k})">삭제</button>
+    </div>`;
+  }).join('');
+}
+
+function hlRefresh(si, mi) {
+  const layer = document.getElementById(`hl-layer-${si}-${mi}`);
+  const rows  = document.getElementById(`hl-rows-${si}-${mi}`);
+  if (layer) layer.innerHTML = hlLayerHTML(si, mi);
+  if (rows)  rows.innerHTML  = hlRowsHTML(si, mi);
+}
+
+function hlSelect(si, mi, k, refresh = true) {
+  const prev = hlSel;
+  hlSel = (k === null || k === undefined) ? null : { si, mi, k };
+  if (!refresh) return;
+  if (prev && (prev.si !== si || prev.mi !== mi)) hlRefresh(prev.si, prev.mi);
+  hlRefresh(si, mi);
+}
+
+function hlSetLabel(si, mi, k, v) {
+  const b = hlBoxes(si, mi)[k];
+  if (!b) return;
+  b.label = String(v || '').trim();
+  const el = document.querySelector(`#hl-layer-${si}-${mi} .hl-box[data-k="${k}"] .hl-box-num`);
+  if (el) el.textContent = b.label || String(k + 1);
+}
+
+function hlSetLabelPos(si, mi, k, v) {
+  const b = hlBoxes(si, mi)[k];
+  if (!b) return;
+  if (v === 'left') b.labelPos = 'left'; else delete b.labelPos;
+  hlRefresh(si, mi);
+}
+
+function hlRemoveBox(si, mi, k) {
+  hlBoxes(si, mi).splice(k, 1);
+  if (hlSel && hlSel.si === si && hlSel.mi === mi) hlSel = null;
+  hlRefresh(si, mi);
+}
+
+/* 포인터 좌표 → 이미지 기준 % 좌표 */
+function hlPct(stage, e) {
+  const img = stage.querySelector('.hl-img');
+  const r   = img.getBoundingClientRect();
+  const cl  = v => Math.min(100, Math.max(0, v));
+  return { x: cl((e.clientX - r.left) / r.width * 100), y: cl((e.clientY - r.top) / r.height * 100) };
+}
+
+function hlPointerDown(e, si, mi) {
+  if (e.button !== undefined && e.button !== 0) return;
+  const stage = document.getElementById(`hl-stage-${si}-${mi}`);
+  const t     = e.target;
+  if (!stage || !t) return;
+  if (t.classList.contains('hl-box-del')) {
+    e.preventDefault(); e.stopPropagation();
+    hlRemoveBox(si, mi, +t.dataset.k);
+    return;
+  }
+  const p     = hlPct(stage, e);
+  const boxes = hlBoxes(si, mi);
+  if (t.classList.contains('hl-box-handle')) {
+    const k = +t.dataset.k;
+    hlSelect(si, mi, k, false);
+    hlDrag = { mode: 'resize', si, mi, k, start: p, orig: { ...boxes[k] }, stage };
+  } else {
+    const boxEl = t.closest('.hl-box');
+    if (boxEl) {
+      const k = +boxEl.dataset.k;
+      hlSelect(si, mi, k, false);
+      hlDrag = { mode: 'move', si, mi, k, start: p, orig: { ...boxes[k] }, stage };
+    } else {
+      hlSelect(si, mi, null, false);
+      hlDrag = { mode: 'draw', si, mi, start: p, stage, el: null };
+    }
+  }
+  e.preventDefault();
+  try { stage.setPointerCapture(e.pointerId); } catch (_) { /* 미지원 브라우저 */ }
+}
+
+function hlPointerMove(e) {
+  if (!hlDrag) return;
+  const d  = hlDrag;
+  const p  = hlPct(d.stage, e);
+  const cl = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  let cur;
+  if (d.mode === 'draw') {
+    cur = { x: Math.min(p.x, d.start.x), y: Math.min(p.y, d.start.y), w: Math.abs(p.x - d.start.x), h: Math.abs(p.y - d.start.y) };
+    if (!d.el) {
+      d.el = document.createElement('div');
+      d.el.className = 'hl-box drawing';
+      d.el.style.setProperty('--c', hlCurColor());
+      d.stage.querySelector('.hl-layer').appendChild(d.el);
+    }
+    Object.assign(d.el.style, { left: cur.x + '%', top: cur.y + '%', width: cur.w + '%', height: cur.h + '%' });
+  } else {
+    const o  = d.orig;
+    const dx = p.x - d.start.x, dy = p.y - d.start.y;
+    cur = d.mode === 'move'
+      ? { x: cl(o.x + dx, 0, 100 - o.w), y: cl(o.y + dy, 0, 100 - o.h), w: o.w, h: o.h }
+      : { x: o.x, y: o.y, w: cl(o.w + dx, 0.5, 100 - o.x), h: cl(o.h + dy, 0.5, 100 - o.y) };
+    const el = d.stage.querySelector(`.hl-box[data-k="${d.k}"]`);
+    if (el) Object.assign(el.style, { left: cur.x + '%', top: cur.y + '%', width: cur.w + '%', height: cur.h + '%' });
+  }
+  d.cur = cur;
+}
+
+function hlPointerUp() {
+  if (!hlDrag) return;
+  const d = hlDrag;
+  hlDrag = null;
+  const boxes = hlBoxes(d.si, d.mi);
+  if (d.mode === 'draw') {
+    if (d.el) d.el.remove();
+    if (d.cur && d.cur.w >= 0.8 && d.cur.h >= 0.8) {
+      boxes.push({ ...hlRound(d.cur), color: hlCurColor(), label: '' });
+      hlSel = { si: d.si, mi: d.mi, k: boxes.length - 1 };
+    }
+  } else if (d.cur && boxes[d.k]) {
+    Object.assign(boxes[d.k], hlRound(d.cur));
+  }
+  hlRefresh(d.si, d.mi);
+}
+document.addEventListener('pointermove', hlPointerMove);
+document.addEventListener('pointerup', hlPointerUp);
+document.addEventListener('pointercancel', hlPointerUp);
+
+/* 전체 화면 편집 모드 토글 (정밀하게 그릴 때) */
+function hlToggleFull(si, mi) {
+  const item = document.getElementById(`step-media-${si}-${mi}`);
+  if (!item) return;
+  const on = !item.classList.contains('hl-full');
+  document.querySelectorAll('.hl-item.hl-full').forEach(el => hlSetFull(el, false));
+  hlSetFull(item, on);
+}
+function hlSetFull(item, on) {
+  item.classList.toggle('hl-full', on);
+  const btn = item.querySelector('.hl-btn');
+  if (btn) btn.textContent = on ? '✕ 닫기 (Esc)' : '⛶ 크게 보기';
+  document.body.style.overflow = on ? 'hidden' : '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const f = document.querySelector('.hl-item.hl-full');
+  if (f) hlSetFull(f, false);
+});
+
+/* 박스 → 튜토리얼 스포트라이트(step.spots) 변환.
+   튜토리얼 화면은 첫 번째 미디어를 쓰므로 첫 미디어가 이미지일 때 그 박스를 사용한다. */
+function boxesToSpots(step) {
+  const m     = (step.media || [])[0];
+  const boxes = (m && m.type === 'image' && Array.isArray(m.boxes)) ? m.boxes : [];
+  const card  = step.cardPos && step.cardPos !== 'auto' ? step.cardPos : null;
+  if (!boxes.length) return card === 'center' ? { auto: false, manual: true, card: 'center', rects: [] } : null;
+  const rects = boxes.map(b => {
+    const r = { ...hlRound(b), color: b.color || hlDefaultColor() };
+    if (b.label) r.label = b.label;
+    if (b.labelPos === 'left') r.labelPos = 'left';
+    return r;
+  });
+  return { auto: false, manual: true, card: card || tutChooseCard(rects), rects };
+}
+
+/* 저장/생성용 스텝 정리: 박스가 있으면 spots를 새로 만들고, 없으면 기존 spots 유지
+   (단, 예전에 박스로 만든 spots는 박스를 모두 지운 경우 함께 제거) */
+function syncStepSpots(step) {
+  const out = { text: step.text, media: step.media || [] };
+  if (step.cardPos && step.cardPos !== 'auto') out.cardPos = step.cardPos;
+  const synced = boxesToSpots(step);
+  if (synced) out.spots = synced;
+  else if (step.spots && !step.spots.manual) out.spots = step.spots;
+  return out;
 }
 
 function addStep() {
@@ -1479,8 +1819,9 @@ async function saveArticle() {
   if (!title)   { showToast('⚠️ 제목을 입력해 주세요.'); return; }
   if (!excerpt) { showToast('⚠️ 요약을 입력해 주세요.'); return; }
 
+  /* 하이라이트 박스가 있는 스텝은 저장 시 바로 튜토리얼 스포트라이트(spots)로 변환된다 */
   const finalSteps = wSteps
-    .map((s, i) => { const el = document.getElementById('step-text-' + i); return { text: (el ? el.value : s.text).trim(), media: s.media || [] }; })
+    .map((s, i) => { const el = document.getElementById('step-text-' + i); return syncStepSpots({ ...s, text: (el ? el.value : s.text).trim() }); })
     .filter(s => s.text || s.media.length > 0);
 
   const payload = { title, excerpt, excerptMedia: [...wExcerptMedia], steps: finalSteps, media: [...wMedia] };

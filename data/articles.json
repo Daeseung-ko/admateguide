@@ -68,24 +68,37 @@
           "text": "- 비즈니스 관리자에서 '데이터 세트 및 픽셀'로 이동합니다.",
           "media": [
             {
-              "url": "/uploads/1783495920878-n1zc-pixel_part_kr_01-835x420.JPEG",
-              "name": "pixel_part_kr_01-835x420.JPEG",
+              "url": "/uploads/1792569049016-olcd-pixel_part_01.JPEG",
+              "name": "pixel_part_01.JPEG",
               "type": "image",
-              "size": 92103,
+              "size": 161263,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 4.6,
+                  "y": 17.7,
+                  "w": 16.1,
+                  "h": 3.4,
+                  "color": "#d93025",
+                  "label": "'데이터 세트 및 픽셀'"
+                }
+              ]
             }
           ],
+          "cardPos": "below",
           "spots": {
-            "auto": true,
+            "auto": false,
+            "manual": true,
             "card": "below",
             "rects": [
               {
-                "x": 22.3,
-                "y": 9.1,
-                "w": 46,
-                "h": 6.6,
-                "label": "데이터 세트 및 픽셀"
+                "x": 4.6,
+                "y": 17.7,
+                "w": 16.1,
+                "h": 3.4,
+                "color": "#d93025",
+                "label": "'데이터 세트 및 픽셀'"
               }
             ]
           }
@@ -94,55 +107,169 @@
           "text": "- 픽셀 선택 후 '파트너' 에서 '파트너 할당' 옵션을 클릭합니다.",
           "media": [
             {
-              "url": "/uploads/1783495958384-vol8-pixel_part_kr_02-835x420.JPEG",
-              "name": "pixel_part_kr_02-835x420.JPEG",
+              "url": "/uploads/1792569081519-86kn-pixel_part_02.JPEG",
+              "name": "pixel_part_02.JPEG",
               "type": "image",
-              "size": 95638,
+              "size": 168116,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 21.9,
+                  "y": 20.9,
+                  "w": 23.2,
+                  "h": 7.8,
+                  "color": "#d93025",
+                  "label": "파트너할당 하려는 픽셀 선택"
+                },
+                {
+                  "x": 49.3,
+                  "y": 42.9,
+                  "w": 3.6,
+                  "h": 3.7,
+                  "color": "#d93025",
+                  "label": "'파트너 탭 클릭'"
+                },
+                {
+                  "x": 90,
+                  "y": 50.4,
+                  "w": 6.8,
+                  "h": 4.4,
+                  "color": "#d93025",
+                  "label": "'파트너 할당' 클릭"
+                }
+              ]
             }
           ],
+          "cardPos": "above",
           "spots": {
-            "auto": true,
+            "auto": false,
+            "manual": true,
             "card": "above",
             "rects": [
               {
-                "x": 66.1,
-                "y": 90.4,
-                "w": 17,
-                "h": 5.3,
-                "label": "파트너 할당"
+                "x": 21.9,
+                "y": 20.9,
+                "w": 23.2,
+                "h": 7.8,
+                "color": "#d93025",
+                "label": "파트너할당 하려는 픽셀 선택"
+              },
+              {
+                "x": 49.3,
+                "y": 42.9,
+                "w": 3.6,
+                "h": 3.7,
+                "color": "#d93025",
+                "label": "'파트너 탭 클릭'"
+              },
+              {
+                "x": 90,
+                "y": 50.4,
+                "w": 6.8,
+                "h": 4.4,
+                "color": "#d93025",
+                "label": "'파트너 할당' 클릭"
               }
             ]
           }
         },
         {
-          "text": "- Enter partner business ID 부분에 나스미디어 비즈니스 ID (793587697339145) 를 입력합니다.",
+          "text": "- Enter partner business ID 부분에 나스미디어 비즈니스 ID (793587697339145) 를 입력\n- 픽셀 관련 타겟 생성을 위해 '전체 엑세스'까지 권한을 설정 후 '할당' 클릭",
           "media": [
             {
-              "url": "/uploads/1783496077574-fvaq-pixel_part_kr_03-835x420.JPEG",
-              "name": "pixel_part_kr_03-835x420.JPEG",
+              "url": "/uploads/1792569106210-50on-pixel_part_03.JPEG",
+              "name": "pixel_part_03.JPEG",
               "type": "image",
-              "size": 82255,
+              "size": 135709,
               "width": null,
-              "height": null
-            }
-          ]
-        },
-        {
-          "text": "- 픽셀 관련 타겟 생성을 위해 '전체 엑세스'까지 권한을 설정한 후 할당합니다.",
-          "media": [
-            {
-              "url": "/uploads/1783496144982-mnnh-pixel_part_kr_04-835x420.JPEG",
-              "name": "pixel_part_kr_04-835x420.JPEG",
-              "type": "image",
-              "size": 81347,
-              "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 34.7,
+                  "y": 27.1,
+                  "w": 30.8,
+                  "h": 8.2,
+                  "color": "#d93025",
+                  "label": "Enter partner business ID"
+                },
+                {
+                  "x": 34.7,
+                  "y": 35.5,
+                  "w": 30.8,
+                  "h": 19.1,
+                  "color": "#d93025",
+                  "label": "전체 엑세스 설정"
+                },
+                {
+                  "x": 61.6,
+                  "y": 55.7,
+                  "w": 3.4,
+                  "h": 4.4,
+                  "color": "#d93025",
+                  "label": "'할당' 클릭"
+                }
+              ]
             }
           ],
           "spots": {
-            "auto": true,
+            "auto": false,
+            "manual": true,
+            "card": "right",
+            "rects": [
+              {
+                "x": 34.7,
+                "y": 27.1,
+                "w": 30.8,
+                "h": 8.2,
+                "color": "#d93025",
+                "label": "Enter partner business ID"
+              },
+              {
+                "x": 34.7,
+                "y": 35.5,
+                "w": 30.8,
+                "h": 19.1,
+                "color": "#d93025",
+                "label": "전체 엑세스 설정"
+              },
+              {
+                "x": 61.6,
+                "y": 55.7,
+                "w": 3.4,
+                "h": 4.4,
+                "color": "#d93025",
+                "label": "'할당' 클릭"
+              }
+            ]
+          }
+        },
+        {
+          "text": "- 파트너 할당 완료.",
+          "media": [
+            {
+              "url": "/uploads/1792569123975-xuxi-pixel_part_04.JPEG",
+              "name": "pixel_part_04.JPEG",
+              "type": "image",
+              "size": 130724,
+              "width": null,
+              "height": null,
+              "boxes": [
+                {
+                  "x": 34.6,
+                  "y": 45.6,
+                  "w": 30.2,
+                  "h": 13.4,
+                  "color": "#d93025",
+                  "label": "파트너 할당 확인"
+                }
+              ]
+            }
+          ],
+          "cardPos": "above",
+          "spots": {
+            "auto": false,
+            "manual": true,
             "card": "above",
             "rects": [
               {
@@ -150,42 +277,55 @@
                 "y": 45.6,
                 "w": 30.2,
                 "h": 13.4,
-                "label": "전체 엑세스"
+                "color": "#d93025",
+                "label": "파트너 할당 확인"
               }
             ]
           }
         },
         {
-          "text": "- 파트너 할당 완료",
+          "text": "- 파트너 목록에 '대기중인 파트너' 또는 '전체 관리 권한을 보유한 파트너'로 확인되면 완료.",
           "media": [
             {
-              "url": "/uploads/1783496223240-pbjb-pixel_part_kr_05-835x420.JPEG",
-              "name": "pixel_part_kr_05-835x420.JPEG",
+              "url": "/uploads/1792569193808-yl08-pixel_part_05.JPEG",
+              "name": "pixel_part_05.JPEG",
               "type": "image",
-              "size": 69984,
+              "size": 153790,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 45.7,
+                  "y": 60.5,
+                  "w": 52.5,
+                  "h": 12.9,
+                  "color": "#d93025",
+                  "label": "파트너 확인"
+                }
+              ]
             }
-          ]
-        },
-        {
-          "text": "- 파트너로 초대되었는지 확인 합니다 (대기중 일 땐 상대방이 수락해야 최종 완료.)",
-          "media": [
-            {
-              "url": "/uploads/1783496245284-r4ch-pixel_part_kr_06-835x420.JPEG",
-              "name": "pixel_part_kr_06-835x420.JPEG",
-              "type": "image",
-              "size": 91820,
-              "width": null,
-              "height": null
-            }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "above",
+            "rects": [
+              {
+                "x": 45.7,
+                "y": 60.5,
+                "w": 52.5,
+                "h": 12.9,
+                "color": "#d93025",
+                "label": "파트너 확인"
+              }
+            ]
+          }
         }
       ],
       "media": [],
       "id": 1782276506657,
       "date": "2026-06-24",
-      "hidden": true
+      "hidden": false
     },
     {
       "title": "Meta 픽셀 생성 가이드_EN",
@@ -215,150 +355,526 @@
           "text": "- 비즈니스 관리자에서 '데이터 세트 및 픽셀'로 이동합니다.",
           "media": [
             {
-              "url": "/uploads/1783402113010-581z-pixel_kr_01-835x420.JPEG",
-              "name": "pixel_kr_01-835x420.JPEG",
+              "url": "/uploads/1791871779841-nv76-pixel_01.JPEG",
+              "name": "pixel_01.JPEG",
               "type": "image",
-              "size": 88292,
+              "size": 157451,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 4.6,
+                  "y": 76.7,
+                  "w": 16,
+                  "h": 3.4,
+                  "color": "#d93025",
+                  "label": "데이터 세트 및 픽셀"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "above",
+            "rects": [
+              {
+                "x": 4.6,
+                "y": 76.7,
+                "w": 16,
+                "h": 3.4,
+                "color": "#d93025",
+                "label": "데이터 세트 및 픽셀"
+              }
+            ]
+          }
         },
         {
           "text": "- + 추가 버튼을 클릭합니다.",
           "media": [
             {
-              "url": "/uploads/1783402193581-4nvz-pixel_kr_02-834x420.JPEG",
-              "name": "pixel_kr_02-834x420.JPEG",
+              "url": "/uploads/1792567085128-mhoi-pixel_02.JPEG",
+              "name": "pixel_02.JPEG",
               "type": "image",
-              "size": 87855,
+              "size": 157451,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 93.8,
+                  "y": 10,
+                  "w": 4.1,
+                  "h": 4.1,
+                  "color": "#d93025",
+                  "label": "+ 추가"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "below",
+            "rects": [
+              {
+                "x": 93.8,
+                "y": 10,
+                "w": 4.1,
+                "h": 4.1,
+                "color": "#d93025",
+                "label": "+ 추가"
+              }
+            ]
+          }
         },
         {
           "text": "- 새 데이터 세트 만들기에서 '픽셀 이름'을 설정 후 '만들기' 버튼을 클릭합니다.",
           "media": [
             {
-              "url": "/uploads/1783402213443-4fm6-pixel_kr_03-835x420.JPEG",
-              "name": "pixel_kr_03-835x420.JPEG",
+              "url": "/uploads/1792567129124-9s8v-pixel_03.JPEG",
+              "name": "pixel_03.JPEG",
               "type": "image",
-              "size": 87155,
+              "size": 159515,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 33.9,
+                  "y": 23.3,
+                  "w": 32.3,
+                  "h": 7.6,
+                  "color": "#d93025",
+                  "label": "픽셀 이름 설정"
+                },
+                {
+                  "x": 61.7,
+                  "y": 68.5,
+                  "w": 4.1,
+                  "h": 4.1,
+                  "color": "#d93025",
+                  "label": "만들기 클릭"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "right",
+            "rects": [
+              {
+                "x": 33.9,
+                "y": 23.3,
+                "w": 32.3,
+                "h": 7.6,
+                "color": "#d93025",
+                "label": "픽셀 이름 설정"
+              },
+              {
+                "x": 61.7,
+                "y": 68.5,
+                "w": 4.1,
+                "h": 4.1,
+                "color": "#d93025",
+                "label": "만들기 클릭"
+              }
+            ]
+          }
         },
         {
-          "text": "- (선택) 연결할 광고계정을 선택하시거나 파트너할당 예정이면 '다음' 버튼을 클릭합니다.",
+          "text": "- 내부에 연결할 광고 계정이 있다면 연결하고, 파트너할당 목적이면 '다음' 버튼 클릭",
           "media": [
             {
-              "url": "/uploads/1783402431819-ohl2-pixel_kr_04-835x420.JPEG",
-              "name": "pixel_kr_04-835x420.JPEG",
+              "url": "/uploads/1792567177768-bvxa-pixel_04.JPEG",
+              "name": "pixel_04.JPEG",
               "type": "image",
-              "size": 68512,
+              "size": 119842,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 62.3,
+                  "y": 38.1,
+                  "w": 3.6,
+                  "h": 4.5,
+                  "color": "#d93025",
+                  "label": "'다음' 클릭"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "below",
+            "rects": [
+              {
+                "x": 62.3,
+                "y": 38.1,
+                "w": 3.6,
+                "h": 4.5,
+                "color": "#d93025",
+                "label": "'다음' 클릭"
+              }
+            ]
+          }
         },
         {
-          "text": "- 이벤트 관리자로 이동을 클릭합니다.",
+          "text": "- 픽셀 코드 확인을 위해 '이벤트 관리자로 이동'",
           "media": [
             {
-              "url": "/uploads/1783402527042-ezmr-pixel_kr_05-835x420.JPEG",
-              "name": "pixel_kr_05-835x420.JPEG",
+              "url": "/uploads/1792567275226-0la5-pixel_05.JPEG",
+              "name": "pixel_05.JPEG",
               "type": "image",
-              "size": 72522,
+              "size": 124864,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 39.2,
+                  "y": 52.4,
+                  "w": 21.5,
+                  "h": 4.1,
+                  "color": "#d93025",
+                  "label": "이벤트 관리자로 이동"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "above",
+            "rects": [
+              {
+                "x": 39.2,
+                "y": 52.4,
+                "w": 21.5,
+                "h": 4.1,
+                "color": "#d93025",
+                "label": "이벤트 관리자로 이동"
+              }
+            ]
+          }
         },
         {
-          "text": "- 픽셀 소스 확인을 위해 'Meta 픽셀 설정' 을 클릭합니다.",
+          "text": "- 생성된 픽셀 선택 후 'Meta 픽셀 설정' 클릭",
           "media": [
             {
-              "url": "/uploads/1783402761953-19yb-pixel_kr_06-830x420.JPEG",
-              "name": "pixel_kr_06-830x420.JPEG",
+              "url": "/uploads/1792567333042-ebtv-pixel_06.JPEG",
+              "name": "pixel_06.JPEG",
               "type": "image",
-              "size": 108448,
+              "size": 206385,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 41.4,
+                  "y": 75.4,
+                  "w": 6.9,
+                  "h": 4.3,
+                  "color": "#d93025",
+                  "label": "Meta 픽셀 설정"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "above",
+            "rects": [
+              {
+                "x": 41.4,
+                "y": 75.4,
+                "w": 6.9,
+                "h": 4.3,
+                "color": "#d93025",
+                "label": "Meta 픽셀 설정"
+              }
+            ]
+          }
         },
         {
-          "text": "- '코드 직접 설치'를 클릭하여 픽셀을 확인합니다.",
+          "text": "- '웹사이트에 직접 Meta 픽셀 추가' 선택 후 '다음' 클릭",
           "media": [
             {
-              "url": "/uploads/1783402832583-b5gi-pixel_kr_07-830x420.JPEG",
-              "name": "pixel_kr_07-830x420.JPEG",
+              "url": "/uploads/1792567378808-hzqd-pixel_07.JPEG",
+              "name": "pixel_07.JPEG",
               "type": "image",
-              "size": 70695,
+              "size": 192398,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 35.3,
+                  "y": 41.4,
+                  "w": 30.2,
+                  "h": 8.4,
+                  "color": "#d93025",
+                  "label": "'웹사이트에 직접 Meta 픽셀 추가' 선택"
+                },
+                {
+                  "x": 62.1,
+                  "y": 78.5,
+                  "w": 3.4,
+                  "h": 4.1,
+                  "color": "#d93025",
+                  "label": "'다음' 클릭"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "right",
+            "rects": [
+              {
+                "x": 35.3,
+                "y": 41.4,
+                "w": 30.2,
+                "h": 8.4,
+                "color": "#d93025",
+                "label": "'웹사이트에 직접 Meta 픽셀 추가' 선택"
+              },
+              {
+                "x": 62.1,
+                "y": 78.5,
+                "w": 3.4,
+                "h": 4.1,
+                "color": "#d93025",
+                "label": "'다음' 클릭"
+              }
+            ]
+          }
         },
         {
-          "text": "- '코드 복사'를 클릭 후 메모장 또는 엑셀에 저장합니다.",
+          "text": "- '코드 복사' 클릭 후 해당 코드를 메인 홈페이지에 삽입",
           "media": [
             {
-              "url": "/uploads/1783402907555-uoe2-pixel_kr_08-830x420.JPEG",
-              "name": "pixel_kr_08-830x420.JPEG",
+              "url": "/uploads/1792567452768-v8dg-pixel_08.JPEG",
+              "name": "pixel_08.JPEG",
               "type": "image",
-              "size": 81647,
+              "size": 148337,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 35.4,
+                  "y": 46.9,
+                  "w": 5,
+                  "h": 4.4,
+                  "color": "#d93025",
+                  "label": "'코드 복사'"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "below",
+            "rects": [
+              {
+                "x": 35.4,
+                "y": 46.9,
+                "w": 5,
+                "h": 4.4,
+                "color": "#d93025",
+                "label": "'코드 복사'"
+              }
+            ]
+          }
         },
         {
-          "text": "- '계속' 버튼을 클릭합니다.",
+          "text": "- 삽입 방법 확인 및 '다음'",
           "media": [
             {
-              "url": "/uploads/1783403010497-l7cy-pixel_kr_09-830x420.JPEG",
-              "name": "pixel_kr_09-830x420.JPEG",
+              "url": "/uploads/1792567567436-i1uv-pixel_10.JPEG",
+              "name": "pixel_10.JPEG",
               "type": "image",
-              "size": 92988,
+              "size": 174488,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 35,
+                  "y": 30.6,
+                  "w": 41,
+                  "h": 12.2,
+                  "color": "#d93025",
+                  "label": "삽입 방법 확인"
+                },
+                {
+                  "x": 72.6,
+                  "y": 51.9,
+                  "w": 3.2,
+                  "h": 3.7,
+                  "color": "#d93025",
+                  "label": "'다음' 클릭"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "above",
+            "rects": [
+              {
+                "x": 35,
+                "y": 30.6,
+                "w": 41,
+                "h": 12.2,
+                "color": "#d93025",
+                "label": "삽입 방법 확인"
+              },
+              {
+                "x": 72.6,
+                "y": 51.9,
+                "w": 3.2,
+                "h": 3.7,
+                "color": "#d93025",
+                "label": "'다음' 클릭"
+              }
+            ]
+          }
         },
         {
-          "text": "- 완료 버튼을 클릭합니다.",
+          "text": "- '자동 고급 매칭 설정' (선택사항) , '완료' 클릭",
           "media": [
             {
-              "url": "/uploads/1783403033595-jenb-pixel_kr_10-830x420.JPEG",
-              "name": "pixel_kr_10-830x420.JPEG",
+              "url": "/uploads/1792567631454-xcih-pixel_11.JPEG",
+              "name": "pixel_11.JPEG",
               "type": "image",
-              "size": 65893,
+              "size": 172929,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 35.2,
+                  "y": 40.1,
+                  "w": 10.2,
+                  "h": 4,
+                  "color": "#d93025",
+                  "label": "'자동 고급 매칭 설정'"
+                },
+                {
+                  "x": 72.5,
+                  "y": 44.6,
+                  "w": 3.3,
+                  "h": 4.3,
+                  "color": "#d93025",
+                  "label": "'완료' 클릭"
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "below",
+            "rects": [
+              {
+                "x": 35.2,
+                "y": 40.1,
+                "w": 10.2,
+                "h": 4,
+                "color": "#d93025",
+                "label": "'자동 고급 매칭 설정'"
+              },
+              {
+                "x": 72.5,
+                "y": 44.6,
+                "w": 3.3,
+                "h": 4.3,
+                "color": "#d93025",
+                "label": "'완료' 클릭"
+              }
+            ]
+          }
         },
         {
-          "text": "- 픽셀 생성이 완료되었고, 이벤트가 발생하면 데이터가 해당 화면에 수신됩니다.",
+          "text": "- 픽셀 생성 완료.",
           "media": [
             {
-              "url": "/uploads/1783403140971-bh8d-pixel_kr_11-830x420.JPEG",
-              "name": "pixel_kr_11-830x420.JPEG",
+              "url": "/uploads/1792567707349-zya8-pixel_12.JPEG",
+              "name": "pixel_12.JPEG",
               "type": "image",
-              "size": 111149,
+              "size": 150991,
               "width": null,
-              "height": null
+              "height": null,
+              "boxes": [
+                {
+                  "x": 48,
+                  "y": 58.3,
+                  "w": 4.9,
+                  "h": 4.1,
+                  "color": "#d93025",
+                  "label": ""
+                }
+              ]
             }
-          ]
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "above",
+            "rects": [
+              {
+                "x": 48,
+                "y": 58.3,
+                "w": 4.9,
+                "h": 4.1,
+                "color": "#d93025"
+              }
+            ]
+          }
+        },
+        {
+          "text": "- 픽셀 삽입 후 수신이 확인되면 해당 화면에서 픽셀 호출 확인 가능",
+          "media": [
+            {
+              "url": "/uploads/1792567735480-i62a-pixel_13.JPEG",
+              "name": "pixel_13.JPEG",
+              "type": "image",
+              "size": 184798,
+              "width": null,
+              "height": null,
+              "boxes": [
+                {
+                  "x": 36.2,
+                  "y": 43.8,
+                  "w": 61.7,
+                  "h": 32.4,
+                  "color": "#d93025",
+                  "label": "픽셀 호출 확인"
+                }
+              ]
+            }
+          ],
+          "spots": {
+            "auto": false,
+            "manual": true,
+            "card": "right",
+            "rects": [
+              {
+                "x": 36.2,
+                "y": 43.8,
+                "w": 61.7,
+                "h": 32.4,
+                "color": "#d93025",
+                "label": "픽셀 호출 확인"
+              }
+            ]
+          }
         }
       ],
       "media": [],
       "id": 1782276449852,
       "date": "2026-06-24",
-      "hidden": true
+      "hidden": false
     },
     {
       "title": "Meta 페이지 엑세스 승인 가이드_EN",
